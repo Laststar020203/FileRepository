@@ -39,6 +39,18 @@ public class FileDao extends EntityDao {
 		return files;
 	}
 
+	public int getFileCount(String name, String version) throws SQLException{
+		PreparedStatement pstmt = connection.prepareStatement(
+				"SELECT COUNT(*) FROM FILES WHERE NAME = ? AND VERSION = ?");
+		pstmt.setString(1, name);
+		pstmt.setString(2, version);
+		
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		
+		return rs.getInt("COUNT(*)");
+	}
+	
 	public FILES getFile(String name, String version) throws SQLException {
 		PreparedStatement pstmt = connection.prepareStatement(
 				"SELECT F.NAME, F.VERSION, F.CONTENT. F.SINCE, F.REPOSITORY_URL, F.DOWNLOAD_COUNT, U.ID, U.NICKNAME, U.EMAIL"
