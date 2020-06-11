@@ -6,8 +6,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<script src="WEB-INF/src/js/AsyncRequest.js"></script>
 <body>
+<script src="/src/js/AsyncRequest.js"></script>
+
 	<form action="register" method="post" id="register_form">
 		<table>
 			<tr>
@@ -49,7 +50,7 @@
 				alert('아이디를 입력해주세요')
 				input_id.focus();
 				return;
-			}else if(!'^[A-Za-z0-9]{4,10}$'.test(input_id.value)){
+			}else if(!(/^[A-Za-z0-9]{4,10}$/g).test(input_id.value)){
 				alert('영문과 숫자만 입력이 가능합니다.')
 				input_id.focus();
 				return;
@@ -72,7 +73,7 @@
 			var input_nickname = document.getElementById('input_nickname');
 
 			
-			AsyncRequest.ready('GET', 'checknickname?nickname='+input_nickname.value, 
+			AsyncRequest.ready('GET', 'checkNickname?nickname='+input_nickname.value, 
 				(data) => {
 					if(data.succees)
 						isNicknameCheck = true;
@@ -100,16 +101,15 @@
 				alert('비밀번호를 입력해주세요');
 				input_pwd.focus();
 				return false;
-			}else if(!'/^[A-Za-z0-9]{4,10}$/g'.test(input_pwd.value)){
+			}else if(!(/^[A-Za-z0-9]{4,10}$/g).test(input_pwd.value)){
 				alert('영문과 숫자만 입력이 가능합니다.');
 				input_pwd.focus();
 				return false;
-			}else if(input_emil.value == ""){
+			}else if(input_email.value == ""){
 				alert('이메일을 입력해주세요');
 				return false;
-			}else if(!'//g'.test(input_email.value)){
+			}else if(!(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i).test(input_email.value)){
 				return false;
-
 			}
 			
 			return true;

@@ -8,10 +8,10 @@ public class USERS {
 	private String EMAIL;
 	private String JOINDATE;
 	
-	public USERS(String ID, String PWD, String NAME, String EMAIL, String JOINDATE) {
+	public USERS(String ID, String PWD, String NICKNAME, String EMAIL, String JOINDATE) {
 		this.ID = ID;
 		this.PWD = PWD;
-		this.NICKNAME = NAME;
+		this.NICKNAME = NICKNAME;
 		this.EMAIL = EMAIL;
 		this.JOINDATE = JOINDATE;
 	}
@@ -24,7 +24,7 @@ public class USERS {
 		return PWD;
 	}
 
-	public String getNAME() {
+	public String getNICKNAME() {
 		return NICKNAME;
 	}
 

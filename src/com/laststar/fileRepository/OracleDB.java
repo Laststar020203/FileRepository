@@ -12,7 +12,7 @@ public class OracleDB {
 		String driverClass = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@localhost:1521:xe";
 		String username = "system";
-		String password = "aass6759";
+		String password = "1234";
 		
 		try {
 			Class.forName(driverClass);
@@ -24,5 +24,17 @@ public class OracleDB {
 	
 	public static Connection getConnection() {
 		return connection;
+	}
+	
+	public static void setAutoCommit(boolean isAuto) throws SQLException {
+		connection.setAutoCommit(isAuto);
+	}
+	
+	public static void commit() throws SQLException {
+		connection.commit();
+	}
+	
+	public static void rollback() throws SQLException {
+		connection.rollback();
 	}
 }

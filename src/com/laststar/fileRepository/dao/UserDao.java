@@ -13,7 +13,6 @@ import com.laststar.fileRepository.entity.USERS;
 public class UserDao extends EntityDao{
 
 	public int getIdCount(String id) throws SQLException {
-
 		PreparedStatement pstmt = connection.prepareStatement("SELECT COUNT(*) FROM USERS WHERE ID = ?");
 		pstmt.setString(1, id);
 		ResultSet rs = pstmt.executeQuery();

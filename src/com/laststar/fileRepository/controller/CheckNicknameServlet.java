@@ -41,14 +41,14 @@ public class CheckNicknameServlet extends HttpServlet implements ResultReturnabl
 		try {
 			
 	        if(dao.getNicknameCount(request.getParameter("nickname")) == 0) {
-	        	succees(writer);
+	        	sendMessage(writer, "사용 가능한 닉네임 입니다!");
 	        }else {
-	        	failes(writer);
+	        	sendMessage(writer, "이미 존재하는 닉네임 입니다!");
 	        }
 	        
 	        
 		} catch (SQLException e) {
-			failes(writer);
+        	sendMessage(writer, "서버 에러");
 		}        
 		
 	}
@@ -56,18 +56,12 @@ public class CheckNicknameServlet extends HttpServlet implements ResultReturnabl
 	private String checkNicknameResponseToJSON(boolean isSuccees, String msg) {
 		return "{"
 				+ "\"succees\":" + isSuccees + ","
-				+ "\"msg\":" + msg + "}";
+				+ "\"msg\":" + "\"" +  msg + "\"" + "}";
 	}
 
 	@Override
-	public void succees(PrintWriter writer) {
-    	writer.append(checkNicknameResponseToJSON(true, "사용가능한 닉네임 입니다!"));
-		
-	}
-
-	@Override
-	public void failes(PrintWriter writer) {
-    	writer.append(checkNicknameResponseToJSON(false, "이미 존재하는 닉네임 입니다."));
+	public void sendMessage(PrintWriter writer, String msg) {
+		writer.append(checkNicknameResponseToJSON(true, msg));
 		
 	}
 	

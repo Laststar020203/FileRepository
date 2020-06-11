@@ -20,7 +20,7 @@
 			</tr>
 			<tr>
 				<td colspan="2">
-				<span>아직 계정이 없으신가요? <a href="regsiter.jsp">회원가입</a></span>
+				<span>아직 계정이 없으신가요? <a href="register.jsp">회원가입</a></span>
 				<td>
 			</tr>
 			<tr>
@@ -40,7 +40,7 @@
 				alert('아이디를 입력해주세요')
 				input_id.focus();
 				return false;
-			}else if(!'^[A-Za-z0-9]{4,10}$'.test(input_id.value)){
+			}else if(!(/^[A-Za-z0-9]{4,10}$/g).test(input_id.value)){
 				alert('영문과 숫자만 입력이 가능합니다.')
 				input_id.focus();
 				return false;
@@ -48,7 +48,7 @@
 				alert('비밀번호를 입력해주세요')
 				input_pwd.focus();
 				return false;
-			}else if(!'^[A-Za-z0-9]{4,10}$'.test(input_pwd.value)){
+			}else if(!(/^[A-Za-z0-9]{4,10}$/g).test(input_pwd.value)){
 				alert('영문과 숫자만 입력이 가능합니다.')
 				input_pwd.focus();
 				return false;
@@ -60,7 +60,7 @@
 		
 		function login_submit(){
 			var login_form = document.getElementById('login_form');
-			if(valid()){
+			if(vaild()){
 				login_form.submit();
 			}
 		}

@@ -6,9 +6,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collection;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,36 +50,40 @@ public class LoginServlet extends HttpServlet implements ResultReturnable {
 			USERS user = dao.login(id);
 
 			if (user == null || !user.getPWD().equals(pwd)) {
-				failes(writer);
+				failesHtmlMessage(writer, "로그인 실패");
 			} else {
 
+				sendMessage(writer, "<script>alert('로그인 성공')</script>");
+
 				request.getSession().setAttribute("user", user);
-				succees(writer);
+
+				for (Cookie c : request.getCookies()) {
+					if (c.getName().equals("reffer")) {
+						response.sendRedirect(c.getValue());
+						c.setMaxAge(0);
+						response.addCookie(c);
+						return;
+					}
+				}
+
+				response.sendRedirect("/");
+
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			failes(writer);
+			failesHtmlMessage(writer, "서버 에러");
 		}
 
 	}
 
 	@Override
-	public void succees(PrintWriter writer) {
-		writer.append("<script>");
-		writer.append("alert('로그인 성공')");
-		writer.append("document.href = referrer");
-		writer.append("</script>");
-
+	public void sendMessage(PrintWriter writer, String msg) {
+		writer.append(msg);
 	}
 
-	@Override
-	public void failes(PrintWriter writer) {
-		writer.append("<script>");
-		writer.append("alert('로그인에 실패하였습니다.'");
-		writer.append("document.href = referrer");
-		writer.append("</script>");
-
+	private void failesHtmlMessage(PrintWriter writer, String msg) {
+		sendMessage(writer, "<script> alert('" + msg + "'); location.href = document.referrer; </script>");
 	}
 
 }

@@ -3,7 +3,7 @@
 	pageEncoding="UTF-8"%>
 <%
 	request.setCharacterEncoding("UTF-8");
-	USERS user = (USERS) session.getAttribute("user");
+	USERS user = (USERS) request.getSession(false).getAttribute("user");
 %>
 <header>
 	<%
@@ -15,7 +15,7 @@
 	<%
 		}else{
 	%>
-	<span><%=user.getNAME() %>님 안녕하세요</span>
+	<span><%=user.getNICKNAME() %>님 안녕하세요</span>
 	<%
 		}
 	%>

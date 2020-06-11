@@ -9,20 +9,23 @@ public class FILES {
 	private USERS AUTHOR;
 	private String CONTENT;
 	private String SINCE;
-	private String REPOSITORY_URL;
+	private String REPOSITORY_PATH;
 	private int DOWNLOAD_COUNT;
-	
-	public FILES(String nAME, String vERSION, USERS aUTHOR, String cONTENT, String sINCE,
-			String rEPOSITORY_URL, int dOWNLOAD_COUNT) {
+		
+
+	public FILES(String nAME, String vERSION, USERS aUTHOR, String cONTENT, String sINCE, 
+			String rEPOSITORY_PATH, int dOWNLOAD_COUNT) {
 		super();
 		NAME = nAME;
 		VERSION = vERSION;
 		AUTHOR = aUTHOR;
 		CONTENT = cONTENT;
 		SINCE = sINCE;
-		REPOSITORY_URL = rEPOSITORY_URL;
+		REPOSITORY_PATH = rEPOSITORY_PATH;
 		DOWNLOAD_COUNT = dOWNLOAD_COUNT;
 	}
+	
+	
 	public String getNAME() {
 		return NAME;
 	}
@@ -41,8 +44,8 @@ public class FILES {
 	public String getSINCE() {
 		return SINCE;
 	}
-	public String getREPOSITORY_URL() {
-		return REPOSITORY_URL;
+	public String getREPOSITORY_PATH() {
+		return REPOSITORY_PATH;
 	}
 	public int getDOWNLOAD_COUNT() {
 		return DOWNLOAD_COUNT;

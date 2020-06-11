@@ -1,3 +1,4 @@
+<%@page import="com.laststar.fileRepository.entity.USERS"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -6,7 +7,24 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<%
+	request.setCharacterEncoding("UTF-8");
+	USERS user = (USERS) request.getSession(false).getAttribute("user");
+	
+	if(user == null){
+%>
+	<script>
+		alert('로그인후 이용해 주세요')
+	</script>
+<%
+		Cookie cookie = new Cookie("reffer", "/write.jsp");
+		response.addCookie(cookie);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
+		dispatcher.forward(request, response);
+	}
+%>
 <body>
+	
 	<form action="fileUpload" method="post" enctype="multipart/form-data" id="writeForm">
 		<table>
 			<tr>
@@ -61,7 +79,7 @@
 			}else if(input_fileVersion.value == ""){
 				alert('파일 버전을 입력해주세요')
 				input_fileVersion.focus();
-			}else if(false && !('/^([0-9.])*$/g').test(input_fileVersion.value)){
+			}else if(false && !(/^([0-9.])*$/g).test(input_fileVersion.value)){
 				alert('버전은 숫자나 . 조합으로만 만들 수 있습니다.')
 				input_fileVersion.focus();
 				return false;

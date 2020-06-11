@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%@ include file="WEB-INF/src/views/common/user_header.jsp" %>
+<%@ include file="/WEB-INF/views/common/user_header.jsp" %>
 
 <div>
 	<div id="search-bar">

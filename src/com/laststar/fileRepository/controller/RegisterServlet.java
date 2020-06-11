@@ -31,7 +31,7 @@ public class RegisterServlet extends HttpServlet implements ResultReturnable{
 		dao = new UserDao();
 	}
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType(CONTENT_TYPE_HTML_UTF8);
 		
@@ -39,33 +39,33 @@ public class RegisterServlet extends HttpServlet implements ResultReturnable{
 		
 		try {
 			
+			OracleDB.setAutoCommit(false);
+			
 			dao.register(request.getParameter("id"),request.getParameter("pwd"),request.getParameter("nickname"),request.getParameter("email"));
 				
-			succees(writer);
+			sendMessage(writer, "로그인 성공");
+			
+			OracleDB.commit();
 					
 		} catch (Exception e) {
 			e.printStackTrace();
-			failes(writer);
+			sendMessage(writer, "서버 에러");
+			try {
+				OracleDB.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 		
 	}
 
 	@Override
-	public void succees(PrintWriter writer) {
+	public void sendMessage(PrintWriter writer, String msg) {
 		writer.append("<script>");
-		writer.append("alert('회원가입 성공')");
-		writer.append("document.href = /login.jsp");
-		writer.append("</script>");
-	}
-
-
-	@Override
-	public void failes(PrintWriter writer) {
-		writer.append("<script>");
-		writer.append("alert('회원가입 실패')");
-		writer.append("document.href = referrer");
-		writer.append("</script>");		
+		writer.append("alert('"+msg+"')");
+		writer.append("</script>");				
 	}
 	
 	

@@ -22,7 +22,7 @@
 %>
 
 <body>
-<%@include file="/WEB-INF/src/views/common/header.jsp" %>
+<%@include file="/WEB-INF/views/common/header.jsp" %>
 <div>
 	<table>
 		<thead>

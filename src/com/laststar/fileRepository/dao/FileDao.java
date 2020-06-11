@@ -1,5 +1,6 @@
 package com.laststar.fileRepository.dao;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,7 +54,7 @@ public class FileDao extends EntityDao {
 	
 	public FILES getFile(String name, String version) throws SQLException {
 		PreparedStatement pstmt = connection.prepareStatement(
-				"SELECT F.NAME, F.VERSION, F.CONTENT. F.SINCE, F.REPOSITORY_URL, F.DOWNLOAD_COUNT, U.ID, U.NICKNAME, U.EMAIL"
+				"SELECT F.NAME, F.VERSION, F.CONTENT, F.SINCE,  F.REPOSITORY_PATH, F.DOWNLOAD_COUNT, U.ID, U.NICKNAME, U.EMAIL"
 						+ " FROM FILES F, USERS U" + " WHERE F.USER_ID = U.ID" + " AND F.NAME = ?"
 						+ " AND F.VERSION = ?");
 		pstmt.setString(1, name);
@@ -61,27 +62,41 @@ public class FileDao extends EntityDao {
 
 		ResultSet rs = pstmt.executeQuery();
 		if (rs.next()) {
-			USERS author = new USERS(rs.getString("U.ID"), null, rs.getString("U.NICKNAME"), rs.getString("U.EMAIL"),
+			USERS author = new USERS(rs.getString("ID"), null, rs.getString("NICKNAME"), rs.getString("EMAIL"),
 					null);
-			return new FILES(rs.getString("F.NAME"), rs.getString("F.VERSION"), author, rs.getString("F.CONTENT"),
-					rs.getString("F.SINCE"), rs.getString("F.REPOSITORY_URL"), rs.getInt("F.DOWNLOAD_COUNT"));
+			return new FILES(rs.getString("NAME"), rs.getString("VERSION"), author, rs.getString("CONTENT"),
+					rs.getString("SINCE"), rs.getString("REPOSITORY_PATH"), rs.getInt("DOWNLOAD_COUNT"));
 		} else {
 			return null;
 		}
 		
 	}
-	
+		
 	public void insertFile(FILES file) throws SQLException {
-		PreparedStatement pstmt = connection.prepareStatement("INSERT INTO FILES VALUES(?,?,?,?,?,?,?)");
+		PreparedStatement pstmt = connection.prepareStatement("INSERT INTO FILES VALUES(?,?,?,?, ?, ?,?)");
 		pstmt.setString(1, file.getNAME());
 		pstmt.setString(2, file.getVERSION());
 		pstmt.setString(3, file.getAUTHOR().getID());
 		pstmt.setString(4, file.getCONTENT());
 		pstmt.setString(5, file.getSINCE());
-		pstmt.setString(6, file.getREPOSITORY_URL());
+		pstmt.setString(6, file.getREPOSITORY_PATH());
 		pstmt.setInt(7, 0);
 		
 		pstmt.executeUpdate();
 	}
+
+	public void modifyFile(String name, String version, String modifyName, String  modifyVersion, String  modifyContent, String modifyRepositoryPath) throws SQLException {
+		PreparedStatement pstmt = connection.prepareStatement("UPDATE FILES SET NAME = ?, VERSION = ?, CONTENT = ?, REPOSITORY_PATH = ?  WHERE NAME = ? AND VERSION = ?");
+		pstmt.setString(1, modifyName);
+		pstmt.setString(2, modifyVersion);
+		pstmt.setString(3, modifyContent);
+		pstmt.setString(4, modifyRepositoryPath);
+		pstmt.setString(5, name);
+		pstmt.setString(6, version);
+		
+		pstmt.executeUpdate();
+	}
+
+
 
 }

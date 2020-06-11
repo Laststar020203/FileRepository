@@ -26,6 +26,7 @@ public class CheckIdServlet extends HttpServlet implements ResultReturnable {
 	private UserDao dao;
 
 	public CheckIdServlet() {
+		super();
 		dao = new UserDao();
 	}
 
@@ -43,31 +44,26 @@ public class CheckIdServlet extends HttpServlet implements ResultReturnable {
 		try {
 
 			if(dao.getIdCount(request.getParameter("id")) == 0){
-				succees(writer);
+				sendMessage(writer, "사용 가능한 아이디 입니다!");
 			}else {
-				failes(writer);
+				sendMessage(writer, "사용할 수 없는 아이디 입니다.");
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			failes(writer);
+			sendMessage(writer, "서버 에러");
 		}
 
 	}
 
 	private String checkIdResponseToJSON(boolean isSuccees, String msg) {
-		return "{" + "\"succees\":" + isSuccees + "," + "\"msg\":" + msg + "}";
+		return "{" + "\"succees\":" + isSuccees + "," + "\"msg\":" + "\"" + msg +"\"" + "}";
 	}
-
+	
 	@Override
-	public void succees(PrintWriter writer) {
-		writer.append(checkIdResponseToJSON(true, "사용가능한 아이디 입니다!"));
+	public void sendMessage(PrintWriter writer, String msg) {
+		writer.append(checkIdResponseToJSON(true, msg));
 	}
-
-	@Override
-	public void failes(PrintWriter writer) {
-		writer.append(checkIdResponseToJSON(false, "사용할 수 없는 아이디 입니다."));
-
-	}
+	
 
 }
