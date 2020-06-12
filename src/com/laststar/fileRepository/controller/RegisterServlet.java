@@ -65,6 +65,7 @@ public class RegisterServlet extends HttpServlet implements ResultReturnable{
 	public void sendMessage(PrintWriter writer, String msg) {
 		writer.append("<script>");
 		writer.append("alert('"+msg+"')");
+		writer.append("location.href = document.referrer");
 		writer.append("</script>");				
 	}
 	

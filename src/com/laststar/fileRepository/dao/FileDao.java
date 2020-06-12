@@ -12,7 +12,15 @@ import com.laststar.fileRepository.entity.USERS;
 public class FileDao extends EntityDao {
 
 	public int getTotalFileCount() throws SQLException {
-		PreparedStatement pstmt = connection.prepareStatement("SELET COUNT(*) FROM FILES");
+		PreparedStatement pstmt = connection.prepareStatement("SELECT COUNT(*) FROM FILES");
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		return rs.getInt("COUNT(*)");
+	}
+	
+	public int getPrefixMatchFileCount(String prefix) throws SQLException {
+		PreparedStatement pstmt = connection.prepareStatement("SELECT COUNT(*) FROM FILES WHERE NAME LIKE ? || '%'");
+		pstmt.setString(1, prefix);
 		ResultSet rs = pstmt.executeQuery();
 		rs.next();
 		return rs.getInt("COUNT(*)");
@@ -21,17 +29,26 @@ public class FileDao extends EntityDao {
 	public FILES[] getFileList(Paging paging) throws SQLException {
 		FILES[] files = new FILES[paging.getEndRow() - paging.getStartRow() + 1];
 		PreparedStatement pstmt = connection
-				.prepareStatement("SELECT  F.NAME, F.VERSION, F.SINCE, U.NICKNAME FROM FILES F, USERS U"
-						+ " WHERE F.USER_ID = U.ID" + " AND ROWNUM >= ?" + " AND ROWNUM <= ?");
-		pstmt.setInt(1, paging.getStartRow());
-		pstmt.setInt(2, paging.getEndRow());
+				.prepareStatement(
+						"SELECT B.RNUM, B.NAME, B.VERSION, B.SINCE, B.NICKNAME " + 
+						"FROM (SELECT ROWNUM RNUM, A.NAME NAME, A.VERSION VERSION, A.SINCE SINCE, A.NICKNAME NICKNAME " + 
+						"	FROM (SELECT F.NAME NAME, F.VERSION VERSION, F.SINCE SINCE, U.NICKNAME NICKNAME " + 
+						"		FROM FILES F, USERS U " + 
+						"		WHERE F.USER_ID = U.ID " + 
+						"	         ) A " + 
+						"	WHERE ROWNUM <= ? " + 
+						"         ) B " + 
+						"WHERE B.RNUM >=?");
+		
+		pstmt.setInt(1, paging.getEndRow());
+		pstmt.setInt(2, paging.getStartRow());
 
 		ResultSet rs = pstmt.executeQuery();
 		for (int i = 0; rs.next(); i++) {
-			String name = rs.getString("F.NAME");
-			String version = rs.getString("F.VERSION");
-			String since = rs.getString("F.SINCE");
-			String user_name = rs.getString("U.NICKNAME");
+			String name = rs.getString("NAME");
+			String version = rs.getString("VERSION");
+			String since = rs.getString("SINCE");
+			String user_name = rs.getString("NICKNAME");
 
 			USERS author = new USERS(null, null, user_name, null, null);
 			files[i] = new FILES(name, version, author, null, since, null, 0);
@@ -70,6 +87,14 @@ public class FileDao extends EntityDao {
 			return null;
 		}
 		
+	}
+	
+	public void deleteFile(String name, String version) throws SQLException {
+		PreparedStatement pstmt = connection.prepareStatement("DELETE FROM FILES WHERE NAME = ? AND VERSION = ? ");
+		pstmt.setString(1, name);
+		pstmt.setString(2, version);
+		
+		pstmt.executeUpdate();
 	}
 		
 	public void insertFile(FILES file) throws SQLException {

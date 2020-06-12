@@ -13,6 +13,8 @@
 	request.setCharacterEncoding("UTF-8");
 	String name = request.getParameter("name");
 	String version = request.getParameter("version");
+
+	System.out.println(name + " " + version);
 	
 	FILES file = new FileDao().getFile(name, version);
 
@@ -20,7 +22,7 @@
 		return;
 %>
 <body>
-	<%@ include file="/WEB-INF/views/common/user_header.jsp"%>
+	<%@include file="/WEB-INF/views/common/header.jsp"%>
 	<table>
 		<tr>
 			<td>파일 이름</td>
@@ -51,15 +53,29 @@
 		<tr>
 			<td colspan="2"><%=file.getCONTENT()%></td>
 		</tr>
-		<%
-			if (user != null && user.getNICKNAME().equals(file.getAUTHOR().getNICKNAME())) {
-		%>
-		<a
-			href="modify.jsp?name=<%=file.getNAME()%>&version=<%=file.getVERSION()%>&content=<%=file.getCONTENT()%>"><button>수정</button></a>
-		<%
-			}
-		%>
+		<tr>
+			<%
+				if (user != null && user.getNICKNAME().equals(file.getAUTHOR().getNICKNAME())) {
+			%>
+			<td><a
+				href="modify.jsp?name=<%=file.getNAME()%>&version=<%=file.getVERSION()%>&content=<%=file.getCONTENT()%>"><button>수정</button></a>
+			</td>
+			<td>
+				<button onclick="deleteCheck()">삭제</button>
+			</td>
+			<%
+				}
+			%>
+		</tr>
 	</table>
+	
+	<script>
+		function deleteCheck(){
+			if(confirm("삭제하시겠습니까?")){
+				location.href = "fileRemove?name=<%=file.getNAME()%>&version=<%=file.getVERSION()%>"	
+			}
+		}
+	</script>
 
 
 

@@ -5,6 +5,8 @@ public class Paging {
 	private final int MAX_PAGE_BLOCK = 10;
 	private final int MAX_ROW_BLOCK = 10;
 	private int totalRowCount;
+
+
 	private int maxPage;
 	private int page;
 	private int startPage;
@@ -16,6 +18,7 @@ public class Paging {
 	private boolean isUpdateWarnning;
 	//DB row 증가로 endPage의 실질적 수치 변경 위험성 감지 해당 값이 true일경우 반드시 totalRowCount를 재입력할 것
 	
+	
 	public Paging(int totalRowCount) {
 		this.totalRowCount = totalRowCount;
 		this.page = 1;
@@ -26,6 +29,16 @@ public class Paging {
 	
 	public int getMaxPage() {
 		return maxPage;
+	}
+	
+	public int getTotalRowCount() {
+		return totalRowCount;
+	}
+
+	public void setTotalRowCount(int totalRowCount) {
+		this.totalRowCount = totalRowCount;
+		this.maxPage = (int)Math.ceil((double)totalRowCount/MAX_ROW_BLOCK);
+		paging();
 	}
 
 
@@ -47,8 +60,8 @@ public class Paging {
 	
 	public void setPage(int page) {
 		this.page = page;
-		if(page > endPage || page < startPage)
-			paging();
+//		if(page > endPage || page < startPage)
+		paging();
 			
 	}
 	
@@ -57,16 +70,12 @@ public class Paging {
 		paging();
 	}
 	
-	public void next() {
-		if(!canNext) return;
-		this.page = endPage + 1;
-		paging();
+	public int getNext() {
+		return endPage + 1;
 	}
 	
-	public void previous() {
-		if(!canPrevious) return;
-		this.page = startPage - 1;
-		paging();
+	public int getPrevious() {
+		return startPage - 1;
 	}
 	
 	public int getPage() {
@@ -89,7 +98,8 @@ public class Paging {
 	}
 
 	public int getEndRow() {
-		return 10 + (MAX_ROW_BLOCK * (page - 1));
+		int value = 10 + (MAX_ROW_BLOCK * (page - 1));
+		return value < totalRowCount ? value : totalRowCount;
 	}
 
 	public boolean isCanNext() {
